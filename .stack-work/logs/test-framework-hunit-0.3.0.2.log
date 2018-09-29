@@ -1,0 +1,7 @@
+Configuring test-framework-hunit-0.3.0.2...
+Preprocessing library for test-framework-hunit-0.3.0.2..
+Building library for test-framework-hunit-0.3.0.2..
+[1 of 1] Compiling Test.Framework.Providers.HUnit ( Test\Framework\Providers\HUnit.hs, .stack-work\dist\7d103d30\build\Test\Framework\Providers\HUnit.o )
+ignoring (possibly broken) abi-depends field for packages
+Installing library in C:\sr\snapshots\03cb0bbe\lib\x86_64-windows-ghc-8.4.3\test-framework-hunit-0.3.0.2-8BK45BpYTRUJudnvBOuIPR
+Registering library for test-framework-hunit-0.3.0.2..

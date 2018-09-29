@@ -1,6 +1,6 @@
 module Main where
 
-import Ex00
+import LCA
 
 
 main = putStrLn hello

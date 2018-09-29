@@ -1,0 +1,21 @@
+Warning: regex-posix.cabal:6:1: The field "build-type" is specified more than
+once at positions 6:1, 19:1
+Configuring regex-posix-0.95.2...
+Preprocessing library for regex-posix-0.95.2..
+Building library for regex-posix-0.95.2..
+[1 of 6] Compiling Text.Regex.Posix.Wrap ( .stack-work\dist\7d103d30\build\Text\Regex\Posix\Wrap.hs, .stack-work\dist\7d103d30\build\Text\Regex\Posix\Wrap.o )
+[2 of 6] Compiling Text.Regex.Posix.String ( Text\Regex\Posix\String.hs, .stack-work\dist\7d103d30\build\Text\Regex\Posix\String.o )
+[3 of 6] Compiling Text.Regex.Posix.Sequence ( Text\Regex\Posix\Sequence.hs, .stack-work\dist\7d103d30\build\Text\Regex\Posix\Sequence.o )
+[4 of 6] Compiling Text.Regex.Posix.ByteString ( Text\Regex\Posix\ByteString.hs, .stack-work\dist\7d103d30\build\Text\Regex\Posix\ByteString.o )
+[5 of 6] Compiling Text.Regex.Posix.ByteString.Lazy ( Text\Regex\Posix\ByteString\Lazy.hs, .stack-work\dist\7d103d30\build\Text\Regex\Posix\ByteString\Lazy.o )
+[6 of 6] Compiling Text.Regex.Posix ( Text\Regex\Posix.hs, .stack-work\dist\7d103d30\build\Text\Regex\Posix.o )
+
+Text\Regex\Posix.hs:72:13: warning: [-Wdeprecations]
+    In the use of `versionTags' (imported from Data.Version):
+    Deprecated: "See GHC ticket #2496"
+   |
+72 |           , versionTags = ["unstable"]
+   |             ^^^^^^^^^^^
+ignoring (possibly broken) abi-depends field for packages
+Installing library in C:\sr\snapshots\03cb0bbe\lib\x86_64-windows-ghc-8.4.3\regex-posix-0.95.2-FLMmMz75XIwP5t3X8eXe
+Registering library for regex-posix-0.95.2..
