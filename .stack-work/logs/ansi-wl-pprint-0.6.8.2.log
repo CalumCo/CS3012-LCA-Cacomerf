@@ -1,8 +1,0 @@
-Configuring ansi-wl-pprint-0.6.8.2...
-Preprocessing library for ansi-wl-pprint-0.6.8.2..
-Building library for ansi-wl-pprint-0.6.8.2..
-[1 of 2] Compiling Text.PrettyPrint.ANSI.Leijen.Internal ( Text\PrettyPrint\ANSI\Leijen\Internal.hs, .stack-work\dist\7d103d30\build\Text\PrettyPrint\ANSI\Leijen\Internal.o )
-[2 of 2] Compiling Text.PrettyPrint.ANSI.Leijen ( Text\PrettyPrint\ANSI\Leijen.hs, .stack-work\dist\7d103d30\build\Text\PrettyPrint\ANSI\Leijen.o )
-ignoring (possibly broken) abi-depends field for packages
-Installing library in C:\sr\snapshots\03cb0bbe\lib\x86_64-windows-ghc-8.4.3\ansi-wl-pprint-0.6.8.2-64dvxGu0jXABXMYQdWpkF4
-Registering library for ansi-wl-pprint-0.6.8.2..

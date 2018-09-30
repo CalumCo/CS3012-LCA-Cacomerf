@@ -1,7 +1,0 @@
-Configuring test-framework-quickcheck2-0.3.0.5...
-Preprocessing library for test-framework-quickcheck2-0.3.0.5..
-Building library for test-framework-quickcheck2-0.3.0.5..
-[1 of 1] Compiling Test.Framework.Providers.QuickCheck2 ( Test\Framework\Providers\QuickCheck2.hs, .stack-work\dist\7d103d30\build\Test\Framework\Providers\QuickCheck2.o )
-ignoring (possibly broken) abi-depends field for packages
-Installing library in C:\sr\snapshots\03cb0bbe\lib\x86_64-windows-ghc-8.4.3\test-framework-quickcheck2-0.3.0.5-G2swgYoPYK2GgDoe2byC1r
-Registering library for test-framework-quickcheck2-0.3.0.5..
