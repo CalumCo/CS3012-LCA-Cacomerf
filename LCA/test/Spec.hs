@@ -9,17 +9,21 @@ import LCA
 {- Hunit Tests -}
 
 -- Test to see if the BST can be created in a normal case
-test1 :: Test
-test1 = testCase (assertEqual "for (BST )")
+BSTtest = BST (1,2)
+Tests = test [ "test1" ~: "for (BST create 1)" ~: (True) ~=? (bstContains (BSTtest , 1) ),
+               "test2" ~: "for (BST create 2)" ~: (True) ~=? (bstContains (BSTtest , 2) )]
 
--- Test to see if BST return correct error for a empty tree
+{-- Test to see if BST return correct error for a empty tree
 test3 :: Test
-Test3 = testCase (assertEqual "for (BST)")
+Test3 = testCase (assertBool "for (BST)")
 
 -- Test if bstContains can correctly find a value in a given BST
 test2 :: Test
-Test2 = testCase (assertEqual "for (bstContains)")
+Test2 = testCase (assertBool "for (bstContains)")
 
 -- Test if bstContains will return false correctly
 test3 :: Test
 Test3 = testCase (assertEqual "for (bstContains)")
+
+main = defaultMain tests
+-}
