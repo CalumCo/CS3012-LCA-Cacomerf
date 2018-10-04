@@ -10,8 +10,10 @@ import LCA
 
 -- Test to see if the BST can be created in a normal case
 BSTtest = BST (1,2)
+BSTtest = BST (BSTtest,3)
 Tests = test [ "test1" ~: "for (BST create 1)" ~: (True) ~=? (bstContains (BSTtest , 1) ),
-               "test2" ~: "for (BST create 2)" ~: (True) ~=? (bstContains (BSTtest , 2) )]
+               "test2" ~: "for (BST create 2)" ~: (True) ~=? (bstContains (BSTtest , 2) ),
+               "test3" ~: "for (BST create 3)" ~: (True) ~=? (bstContains (BSTtest , 3) )]
 
 {-- Test to see if BST return correct error for a empty tree
 test3 :: Test
