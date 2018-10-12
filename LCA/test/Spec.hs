@@ -7,7 +7,7 @@ import Test.Framework.Providers.HUnit (testCase)
 
 import LCA
 {- Hunit Tests -}
-
+main = defaultMain Tests
 -- Test to see if the BST can be created in a normal case
 BSTtest = BST (1,2)
 BSTtest = BST (BSTtest,3)
@@ -26,6 +26,4 @@ Test2 = testCase (assertBool "for (bstContains)")
 -- Test if bstContains will return false correctly
 test3 :: Test
 Test3 = testCase (assertEqual "for (bstContains)")
-
-main = defaultMain tests
 -}
