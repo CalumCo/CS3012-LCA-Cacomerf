@@ -12,7 +12,6 @@ main = defaultMain tests
 tests :: [TF.Test]
 tests = [ testGroup "LCA Tests"
           [simpleTests
-          , otherTests
           ]
         ]
 
