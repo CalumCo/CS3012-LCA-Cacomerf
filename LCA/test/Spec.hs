@@ -15,13 +15,13 @@ tests = [ testGroup "LCA Tests"
           ]
         ]
 
-BSTtest = BST (1,2)
+
 
 simpleTests:: TF.Test
 simpleTests
  = testGroup "\nPart 1 simple\n"
   [ testCase "test 1"
-    (eval bstContains (BSTtest , 1) @?= True)
+    (size (fromList [1,2,3,4]) @?= 4)
 
   ]
 
