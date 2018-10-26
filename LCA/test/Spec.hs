@@ -7,13 +7,30 @@ import Test.Framework.Providers.HUnit (testCase)
 
 import LCA
 {- Hunit Tests -}
-main = defaultMain Tests
+main = defaultMain tests
 -- Test to see if the BST can be created in a normal case
+tests :: [TF.Test]
+tests = [ testGroup "LCA Tests"
+          [simpleTests
+          , otherTests
+          ]
+        ]
+
 BSTtest = BST (1,2)
-BSTtest = BST (BSTtest,3)
-Tests = test [ "test1" ~: "for (BST create 1)" ~: (True) ~=? (bstContains (BSTtest , 1) ),
-               "test2" ~: "for (BST create 2)" ~: (True) ~=? (bstContains (BSTtest , 2) ),
-               "test3" ~: "for (BST create 3)" ~: (True) ~=? (bstContains (BSTtest , 3) )]
+
+simpleTests:: TF.Test
+simpleTests
+ = testGroup "\nPart 1 simple\n"
+  [ testCase "test 1"
+    (eval bstContains (BSTtest , 1) @?= True)
+
+  ]
+
+-- BSTtest = BST (1,2)
+-- BSTtest = BST (BSTtest,3)
+-- Tests = test [ "test1" ~: "for (BST create 1)" ~: (True) ~=? (bstContains (BSTtest , 1) ),
+--               "test2" ~: "for (BST create 2)" ~: (True) ~=? (bstContains (BSTtest , 2) ),
+--               "test3" ~: "for (BST create 3)" ~: (True) ~=? (bstContains (BSTtest , 3) )]
 
 {-- Test to see if BST return correct error for a empty tree
 test3 :: Test
