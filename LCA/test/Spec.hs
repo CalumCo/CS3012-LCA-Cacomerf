@@ -15,13 +15,22 @@ tests = [ testGroup "LCA Tests"
           ]
         ]
 
-
+xs = fromList [6,4,2,1]
+ys = fromList [7,5,3,2,1]
+emptyls = fromList []
 
 simpleTests:: TF.Test
 simpleTests
- = testGroup "\nPart 1 simple\n"
-  [ testCase "test 1"
+ = testGroup "\nPart 1 size\n"
+  [ testCase "basic test"
     (size (fromList [1,2,3,4]) @?= 4)
+  , testCase "size of empty lists"
+    (size (emptyls) @?= 0)
+  , testCase "empty path"
+    (toList  (lca xs emptyls) @?= [])
+  , testCase "both empty and same path"
+    (toList (lca emptyls emptyls) @?= [])
+  
 
   ]
 

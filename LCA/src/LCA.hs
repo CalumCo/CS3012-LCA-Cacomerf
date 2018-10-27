@@ -90,6 +90,3 @@ fromList = foldr cons Nil
 
 toList :: Path -> [Int]
 toList = unfoldr uncons
-
-xs = fromList [6,4,3,2,1]
-ys = fromList [5,3,2,1]
