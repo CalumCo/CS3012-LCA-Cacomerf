@@ -17,6 +17,7 @@ tests = [ testGroup "LCA Tests"
 
 xs = fromList [6,4,2,1]
 ys = fromList [7,5,3,2,1]
+zs = fromList [8,4,2,1]
 emptyls = fromList []
 
 simpleTests:: TF.Test
@@ -30,7 +31,14 @@ simpleTests
     (toList  (lca xs emptyls) @?= [])
   , testCase "both empty and same path"
     (toList (lca emptyls emptyls) @?= [])
-  
+  , testCase "lca of two normal paths of diffrent lengths"
+    (toList (lca xs ys) @?= [2,1])
+  , testCase "lca of two normal paths of same lengths"
+    (toList (lca' xs zs) @?= [4,2,1])
+  , testCase "testing keep of 0 of two paths"
+    (toList(keep 0 (lca xs ys)) @?= [])
+  , testCase "testing keep of 2"
+    (toList(keep 2 (lca xs ys)) @?= [2,1])
 
   ]
 
