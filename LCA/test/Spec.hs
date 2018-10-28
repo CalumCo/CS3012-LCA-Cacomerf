@@ -14,7 +14,7 @@ tests = [ testGroup "LCA Tests"
           [simpleTests
           ]
         ]
-
+ts = fromList [9,8,7]
 xs = fromList [6,4,2,1]
 ys = fromList [7,5,3,2,1]
 zs = fromList [8,4,2,1]
@@ -39,7 +39,10 @@ simpleTests
     (toList(keep 0 (lca xs ys)) @?= [])
   , testCase "testing keep of 2"
     (toList(keep 2 (lca xs ys)) @?= [2,1])
-
+  , testCase "lca with no match"
+    (toList(lca xs ts) @?= [])
+  , testCase "lca of the same paths"
+    (lca xs xs @?= xs)
   ]
 
 -- BSTtest = BST (1,2)
