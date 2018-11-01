@@ -1,29 +1,30 @@
 module LCA where
 
-import Data.List (unfoldr)
-type Id = Int
+import Data.List
+import Data.Set (Set)
+import qualified Data.Set as Set
+import Data.Maybe
 
-data Tree
-  = Bin {-# UNPACK #-} !Id Tree Tree
-  | Tip {-# UNPACK #-} !Id
-  deriving (Show, Read)
+data Graph a = Empty
+              | Blank (Graph a) (Graph a)
+              | Node a (Graph a) (Graph a)
+                deriving (Eq, Ord, Show)
 
-instance Eq Tree where
-  Tip a     == Tip b     = a == b
-  Bin a _ _ == Bin b _ _ = a == b
-  _         == _         = False
+data GraphDir = GraphLeft
+              | GraphRight
+              deriving (Eq, Ord, Show)
 
-data Path
-  = Nil
-  | Cons {-# UNPACK #-} !Int
-         {-# UNPACK #-} !Int
-         Tree
-         Path
-  deriving (Show, Read)
+newtype FullGraph a = FullGraph [Graph a] deriving (Eq, Ord, Show)
 
-instance Eq Path where
-  Nil == Nil = True
-  Cons _ _ s _ == Cons _ _ t _ = s == t
+type GraphPath = [GraphDir]
+
+lastNode :: a -> Graph a
+lastNode a = Node a Empty Empty
+
+instance Functor Graph where
+    fmap fun Empty = Empty
+    fmap fun (Blank l r) = Blank (fmap fun l) (fmap fun r)
+    fmap fun (Node x l r) = Node (fun x) (fmap fun l) (fmap fun r)
 
 size :: Path -> Int
 size Nil = 0
