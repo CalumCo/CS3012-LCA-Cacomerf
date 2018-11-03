@@ -22,72 +22,114 @@ lastNode :: a -> Graph a
 lastNode a = Node a Empty Empty
 
 instance Functor Graph where
-    fmap fun Empty = Empty
-    fmap fun (Blank l r) = Blank (fmap fun l) (fmap fun r)
-    fmap fun (Node x l r) = Node (fun x) (fmap fun l) (fmap fun r)
+fmap fun Empty = Empty
+fmap fun (Blank l r) = Blank (fmap fun l) (fmap fun r)
+fmap fun (Node x l r) = Node (fun x) (fmap fun l) (fmap fun r)
 
-size :: Path -> Int
-size Nil = 0
-size (Cons n _ _ _) = n
+paths :: Eq a => Graph a -> a -> [GraphPath]
+paths Empty _ = []
+paths n el = reverse <$> pathsInt n el []
 
-consT :: Int -> Tree -> Path -> Path
-consT w t ts = Cons (w + size ts) w t ts
+pathsInt :: Eq a => Graph a -> a -> GraphPath -> [GraphPath]
+pathsInt (Blank l r) el p = amassPaths l r el p
+pathsInt (Node a l r) el p =
+    (if a == el then (p:) else id) $ amassPaths l r el p
+pathsInt _ _ _ = []
 
-cons :: Id -> Path -> Path
-cons k (Cons n w t (Cons _ w' t2 ts))
-  | w == w' = Cons (n + 1) (2 * w + 1) (Bin k t t2) ts
-cons k ts = Cons (size ts + 1) 1 (Tip k) ts
+amassPaths :: Eq a => Graph a -> Graph a -> a -> GraphPath -> [GraphPath]
+amassPaths l r el p =
+    let left  = pathsInt l el (GraphLeft  : p)
+        right = pathsInt r el (GraphRight : p)
+    in left ++ right
 
-uncons :: Path -> Maybe (Id, Path)
-uncons Nil = Nothing
-uncons (Cons _ _ (Tip k) ts)     = Just (k, ts)
-uncons (Cons _ w (Bin k l r) ts) = Just (k, consT w2 l (consT w2 r ts))
-  where w2 = div w 2
+nodesAlongPath :: Graph a -> GraphPath -> [Graph a]
+nodesAlongPath n [] = [n]
+nodesAlongPath Empty _ = [Empty]
+nodesAlongPath (Blank l r) (GraphLeft : xs) = Blank l r : nodesAlongPath l xs
+nodesAlongPath (Blank l r) (GraphRight : xs) = Blank l r : nodesAlongPath r xs
+nodesAlongPath (Node el l r) (GraphLeft : xs) = Node el l r : nodesAlongPath l xs
+nodesAlongPath (Node el l r) (GraphRight : xs) = Node el l r : nodesAlongPath r xs
 
-keep :: Int -> Path -> Path
-keep _ Nil = Nil
-keep k xs@(Cons n w t ts)
-  | k >= n = xs
-  | otherwise = case compare k (n - w) of
-     GT -> keepT (k - n + w) w t ts
-     EQ -> ts
-     LT -> keep k ts
+nodesToEls :: [Graph a] -> [a]
+nodesToEls [] = []
+nodesToEls (Node el _ _ : xs) = el : nodesToEls xs
+nodesToEls (x : xs) = nodesToEls xs
 
-keepT :: Int -> Int -> Tree -> Path -> Path
-keepT n w (Bin _ l r) ts = case compare n w2 of
-  LT -> keepT n w2 r ts
-  EQ -> consT w2 r ts
-  GT | n == w - 1 -> consT w2 l (consT w2 r ts)
-     | otherwise -> keepT (n - w2) w2 l (consT w2 r ts)
- where w2 = div w 2
-keepT _ _ _ ts = ts
+elsAlongPath :: Graph a -> GraphPath -> [a]
+elsAlongPath g p = nodesToEls $ nodesAlongPath g p
 
-lca' :: Path -> Path -> Path
-lca' h@(Cons _ w x xs) (Cons _ _ y ys)
-  | x == y = h
-  | xs == ys = lcaT w x y ys
-  | otherwise = lca' xs ys
-lca' _ _ = Nil
+followNode :: Graph a -> GraphPath -> Maybe (Graph a)
+followNode g p = tryGetLast $ nodesAlongPath g p
+    where
+        tryGetLast [] = Nothing
+        tryGetLast lst | length lst < length p = Nothing
+        tryGetLast lst = Just (last lst)
 
-lcaT :: Int -> Tree -> Tree -> Path -> Path
-lcaT w (Bin _ la ra) (Bin _ lb rb) ts
-  | la == lb = consT w2 la (consT w2 ra ts)
-  | ra == rb = lcaT w2 la lb (consT w ra ts)
-  | otherwise = lcaT w2 ra rb ts
-  where w2 = div w 2
-lcaT _ _ _ ts = ts
+follow :: Graph a -> GraphPath -> Maybe a
+follow graph path = case followNode graph path of
+    Just (Node a _ _) -> Just a
+    _ -> Nothing
 
-lca :: Path -> Path -> Path
-lca xs ys = case compare nxs nys of
-  LT -> lca' xs (keep nxs ys)
-  EQ -> lca' xs ys
-  GT -> lca' (keep nys xs) ys
- where
-  nxs = size xs
-  nys = size ys
+-- if path is longer, inserts as a leaf on the edge
+-- if path is shorter, node is inserted, previous graph moved to left
+replaceNode :: (Graph a -> Graph a) -> Graph a -> GraphPath -> Graph a
+replaceNode f Empty _ = f Empty
+replaceNode f n [] = f n
+replaceNode f (Blank l r) (GraphLeft : xs) = Blank (replaceNode f l xs) r
+replaceNode f (Blank l r) (GraphRight : xs) = Blank l (replaceNode f r xs)
+replaceNode f (Node a l r) (GraphLeft : xs) = Node a (replaceNode f l xs) r
+replaceNode f (Node a l r) (GraphRight : xs) = Node a l (replaceNode f r xs)
 
-fromList :: [Int] -> Path
-fromList = foldr cons Nil
+insertElement :: Graph a -> GraphPath -> a -> Graph a
+insertElement g p el = replaceNode f g p
+    where
+    f n = Node el n Empty
 
-toList :: Path -> [Int]
-toList = unfoldr uncons
+insertNode :: Graph a -> GraphPath -> Graph a -> Graph a
+insertNode g p subGraph = replaceNode (Blank subGraph) g p
+
+graphToList :: Graph a -> [Graph a]
+graphToList (Node el l r) = Node el l r : graphToList l ++ graphToList r
+graphToList (Blank l r) = graphToList l ++ graphToList r
+graphToList Empty = [Empty]
+
+treeFromList :: [a] -> Graph a
+treeFromList lst = head $ formTree $ treePartition 1 lst
+    where
+        treePartition :: Int -> [a] -> [[a]]
+        treePartition _ [] = []
+        treePartition stage lst = take stage lst :
+            treePartition (stage * 2) (drop stage lst)
+
+        formTree :: [[a]] -> [Graph a]
+        formTree = foldr treeLayer [Empty]
+
+        treeLayer :: [a] -> [Graph a] -> [Graph a]
+        treeLayer [] _ = []
+        treeLayer (x : xs) [] = lastNode x : treeLayer xs []
+        treeLayer (x : xs) [a] = Node x a Empty : treeLayer xs []
+        treeLayer (x : xs) (y1 : y2 : ys) = Node x y1 y2 : treeLayer xs ys
+
+lca :: Ord a => FullGraph a -> a -> a -> Maybe a
+lca (FullGraph roots) el1 el2 =
+    let
+        ancestorsA = ancestors el1
+        ancestorsB = ancestors el2
+        sharedAncestors = Set.toList $ Set.intersection ancestorsA ancestorsB
+
+        -- all posible paths from all roots to all sharedAncestors, we've
+        -- concatenated the paths from different roots, because we only care
+        -- about which ancestor has the longest minimum path length
+        pathsToAncestors =
+            map (\a -> concatMap (`paths` a) roots) sharedAncestors
+
+        shortestPathLengths = map (minimum . map length) pathsToAncestors
+
+        mostNestedAncestor = if null sharedAncestors then
+            Nothing else
+            Just (fst (maximumBy (\(_, a) (_, b) -> compare a b)
+                (zip sharedAncestors shortestPathLengths)))
+    in mostNestedAncestor
+        where
+            ancestors el = Set.fromList $
+                roots >>= \root -> paths root el >>= elsAlongPath root
