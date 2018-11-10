@@ -23,6 +23,10 @@ library
 test-suite tests
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
+  other-modules:       SampleTree
+                       , ArbitraryGraph
+                       , BigGraph
+                       , BigTree
   main-is:             Tests.hs
   build-depends:       base
                        , LCA
