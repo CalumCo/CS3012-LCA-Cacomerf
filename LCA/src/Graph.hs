@@ -1,4 +1,4 @@
-module LCA where
+module Graph where
 
 import Data.List
 import Data.Set (Set)
@@ -18,13 +18,13 @@ newtype FullGraph a = FullGraph [Graph a] deriving (Eq, Ord, Show)
 
 type GraphPath = [GraphDir]
 
-lastNode :: a -> Graph a
-lastNode a = Node a Empty Empty
+finalNode :: a -> Graph a
+finalNode a = Node a Empty Empty
 
 instance Functor Graph where
-fmap fun Empty = Empty
-fmap fun (Blank l r) = Blank (fmap fun l) (fmap fun r)
-fmap fun (Node x l r) = Node (fun x) (fmap fun l) (fmap fun r)
+  fmap fun Empty = Empty
+  fmap fun (Blank l r) = Blank (fmap fun l) (fmap fun r)
+  fmap fun (Node x l r) = Node (fun x) (fmap fun l) (fmap fun r)
 
 paths :: Eq a => Graph a -> a -> [GraphPath]
 paths Empty _ = []
@@ -42,24 +42,24 @@ amassPaths l r el p =
         right = pathsInt r el (GraphRight : p)
     in left ++ right
 
-nodesAlongPath :: Graph a -> GraphPath -> [Graph a]
-nodesAlongPath n [] = [n]
-nodesAlongPath Empty _ = [Empty]
-nodesAlongPath (Blank l r) (GraphLeft : xs) = Blank l r : nodesAlongPath l xs
-nodesAlongPath (Blank l r) (GraphRight : xs) = Blank l r : nodesAlongPath r xs
-nodesAlongPath (Node el l r) (GraphLeft : xs) = Node el l r : nodesAlongPath l xs
-nodesAlongPath (Node el l r) (GraphRight : xs) = Node el l r : nodesAlongPath r xs
+nodesThroughPath :: Graph a -> GraphPath -> [Graph a]
+nodesThroughPath n [] = [n]
+nodesThroughPath Empty _ = [Empty]
+nodesThroughPath (Blank l r) (GraphLeft : xs) = Blank l r : nodesThroughPath l xs
+nodesThroughPath (Blank l r) (GraphRight : xs) = Blank l r : nodesThroughPath r xs
+nodesThroughPath (Node el l r) (GraphLeft : xs) = Node el l r : nodesThroughPath l xs
+nodesThroughPath (Node el l r) (GraphRight : xs) = Node el l r : nodesThroughPath r xs
 
 nodesToEls :: [Graph a] -> [a]
 nodesToEls [] = []
 nodesToEls (Node el _ _ : xs) = el : nodesToEls xs
 nodesToEls (x : xs) = nodesToEls xs
 
-elsAlongPath :: Graph a -> GraphPath -> [a]
-elsAlongPath g p = nodesToEls $ nodesAlongPath g p
+elsThroughPath :: Graph a -> GraphPath -> [a]
+elsThroughPath g p = nodesToEls $ nodesThroughPath g p
 
 followNode :: Graph a -> GraphPath -> Maybe (Graph a)
-followNode g p = tryGetLast $ nodesAlongPath g p
+followNode g p = tryGetLast $ nodesThroughPath g p
     where
         tryGetLast [] = Nothing
         tryGetLast lst | length lst < length p = Nothing
@@ -106,7 +106,7 @@ treeFromList lst = head $ formTree $ treePartition 1 lst
 
         treeLayer :: [a] -> [Graph a] -> [Graph a]
         treeLayer [] _ = []
-        treeLayer (x : xs) [] = lastNode x : treeLayer xs []
+        treeLayer (x : xs) [] = finalNode x : treeLayer xs []
         treeLayer (x : xs) [a] = Node x a Empty : treeLayer xs []
         treeLayer (x : xs) (y1 : y2 : ys) = Node x y1 y2 : treeLayer xs ys
 
@@ -132,4 +132,4 @@ lca (FullGraph roots) el1 el2 =
     in mostNestedAncestor
         where
             ancestors el = Set.fromList $
-                roots >>= \root -> paths root el >>= elsAlongPath root
+                roots >>= \root -> paths root el >>= elsThroughPath root

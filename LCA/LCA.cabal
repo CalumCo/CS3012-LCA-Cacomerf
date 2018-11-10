@@ -1,41 +1,32 @@
 name:                LCA
 version:             0.1.0.0
-synopsis:            CS3016 Exercise One
+-- synopsis:
+-- description:
+homepage:            https://github.com/githubuser/LCA#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Calum
-maintainer:          Cacomerf@tcd.ie
-category:            Game
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2017 Author name here
+category:            Web
 build-type:          Simple
 cabal-version:       >=1.10
+extra-source-files:  README.md
 
 library
-  build-depends:      base
+  hs-source-dirs:      src
+  exposed-modules:     Graph
+  build-depends:       base >= 4.7 && < 5
+                       , containers
+  default-language:    Haskell2010
 
-
-  hs-source-dirs:     src/
-  default-language:   Haskell2010
-
-executable ex01
-  main-is:            Main.hs
-  build-depends:      base
-  other-modules:    LCA
-
-
-
-  hs-source-dirs:     src/
-  default-language:   Haskell2010
-
-test-suite Main
-  main-is: Spec.hs
-  type: exitcode-stdio-1.0
-  x-uses-tf: true
-  build-depends:  base,
-                  HUnit,
-                  test-framework,
-                  test-framework-hunit
-
-
-  hs-source-dirs: test, src
-  default-language: Haskell2010
-  other-modules:  LCA
+test-suite tests
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Tests.hs
+  build-depends:       base
+                       , LCA
+                       , tasty
+                       , tasty-quickcheck
+                       , tasty-hunit
+  default-language:    Haskell2010
